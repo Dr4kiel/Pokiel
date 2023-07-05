@@ -1,11 +1,15 @@
 package pokiel.model.entity;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class CardCalculator {
+	
+	private CardCalculator() {
+		
+	}
 	
 	public static int checkVictoryCondition(List<Card> hand) {
 		
@@ -48,11 +52,9 @@ public class CardCalculator {
 			valueOfHand = valueOfHand | VictoryCondition.QuinteFlush.getValue();
 		}
 		
-		if(VictoryCondition.QuinteFlush.arePresent(valueOfHand)) {
-			if(isQuiteFlushRoyale(hand)) {
+		if(VictoryCondition.QuinteFlush.arePresent(valueOfHand) && isQuiteFlushRoyale(hand)) {
 				valueOfHand = valueOfHand & ~VictoryCondition.QuinteFlush.getValue();
 				valueOfHand = valueOfHand | VictoryCondition.QuinteFlushRoyale.getValue();
-			}
 		}
 		
 		if(valueOfHand == 0)
@@ -63,11 +65,15 @@ public class CardCalculator {
 	
 	private static boolean isQuiteFlushRoyale(List<Card> hand) {
 		
+		Collections.sort(hand);
+		
 		int cardValueCheck = CardValue.As.getValeur();
 		
 		for(Card card : hand) {
 			if(card.getValue().getValeur() == cardValueCheck) {
 				cardValueCheck--;
+				if(cardValueCheck == 9)
+					break;
 			}
 		}
 		
@@ -76,27 +82,31 @@ public class CardCalculator {
 
 	private static boolean isSuite(List<Card> hand) {
 		
-		int compteurSuite = 0;
-		
-		CardValue prevCardValue = null;
+		boolean result = false;
 		
 		Collections.sort(hand);
 		
-		for(Card card : hand) {
-			if(prevCardValue != null) {
-				if(prevCardValue.getValeur() - 1 == card.getValue().getValeur()) {
-					compteurSuite++;
-				}
+		for(int i = 0; i <= hand.size()%5; i++) {
+			int valeur = hand.get(i).getValue().getValeur();
+			int count = 0;
+			for(int j = i; j <= i+4; j++) {
+				if(valeur == hand.get(j).getValue().getValeur())
+					count++;
+				valeur--;
 			}
-			prevCardValue = card.getValue();
+			if(count == 5)
+				result = true;
 		}
 		
-		return  compteurSuite >= 5;
+		if(hand.get(hand.size() % 5 + 1).getValue().getValeur() == 5 && hand.get(0).getValue().compareTo(CardValue.As) == 0 && ( 5 - hand.get(hand.size() % 5 + 4).getValue().getValeur() == 3))
+			result = true;
+		
+		return result;
 	}
 
 	private static boolean isCouleur(List<Card> hand) {
 		
-		Map<CardColor, Integer> nbCouleurs = new HashMap<>();
+		Map<CardColor, Integer> nbCouleurs = new EnumMap<>(CardColor.class);
 		
 		for(Card card : hand) {
 			nbCouleurs.merge(card.getColor(), 1, (prev, one) -> prev + one);
@@ -113,7 +123,7 @@ public class CardCalculator {
 
 	public static Map<CardValue, Integer> countCards(List<Card> hand){
 		
-		Map<CardValue, Integer> counter = new HashMap<>();
+		Map<CardValue, Integer> counter = new EnumMap<>(CardValue.class);
 		
 		for(Card card : hand) {
 			counter.merge(card.getValue(), 1, (prev, one) -> prev + one);
