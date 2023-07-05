@@ -1,10 +1,11 @@
 package pokiel.model.entity;
 
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class Player {
 	
-	private Stack<Card> hand;
+	private Deque<Card> hand;
 	private int bank;
 	private final String name;
 	private boolean stillPlaying;
@@ -16,7 +17,7 @@ public class Player {
 	public Player(String name) {
 		super();
 		this.name = name;
-		this.hand = new Stack<Card>();
+		this.hand = new ArrayDeque<>();
 		this.bank = 0;
 		this.stillPlaying = true;
 	}
@@ -36,7 +37,7 @@ public class Player {
 		return bank;
 	}
 	
-	public Stack<Card> getHand() {
+	public Deque<Card> getHand() {
 		return hand;
 	}
 	
@@ -48,7 +49,7 @@ public class Player {
 		this.bank = bank;
 	}
 	
-	public void setHand(Stack<Card> hand) {
+	public void setHand(Deque<Card> hand) {
 		this.hand = hand;
 	}
 	

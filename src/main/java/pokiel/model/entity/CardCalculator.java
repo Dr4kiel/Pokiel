@@ -17,49 +17,65 @@ public class CardCalculator {
 		
 		Map<CardValue, Integer> counter = countCards(hand);
 		
+		int valueOfHand = checkVictoryConditionForSameCards(counter);
+		
+		valueOfHand = checkVictoryConditionForDifferentCards(hand, valueOfHand);
+		
+		if(valueOfHand == 0)
+			valueOfHand = valueOfHand | VictoryCondition.HAUTEUR.getValue();
+		
+		return valueOfHand;
+	}
+
+	private static int checkVictoryConditionForDifferentCards(List<Card> hand, int valueOfHand) {
+		if(isCouleur(hand))
+			valueOfHand = valueOfHand | VictoryCondition.COULEUR.getValue();
+		
+		if(isSuite(hand))
+			valueOfHand = valueOfHand | VictoryCondition.SUITE.getValue();
+		
+		if(VictoryCondition.COULEUR.arePresent(valueOfHand) && VictoryCondition.SUITE.arePresent(valueOfHand)) {
+			valueOfHand = valueOfHand & ~VictoryCondition.COULEUR.getValue();
+			valueOfHand = valueOfHand & ~VictoryCondition.SUITE.getValue();
+			valueOfHand = valueOfHand | VictoryCondition.QUITE_FLUSH.getValue();
+		}
+		
+		if(VictoryCondition.QUITE_FLUSH.arePresent(valueOfHand) && isQuiteFlushRoyale(hand)) {
+				valueOfHand = valueOfHand & ~VictoryCondition.QUITE_FLUSH.getValue();
+				valueOfHand = valueOfHand | VictoryCondition.QUINTE_FLUSH_ROYALE.getValue();
+		}
+		return valueOfHand;
+	}
+
+	private static int checkVictoryConditionForSameCards(Map<CardValue, Integer> counter) {
 		int valueOfHand = 0;
 		
 		for(Integer nbOfCard : counter.values()) {
-			if(nbOfCard == 4) {
-				valueOfHand = valueOfHand | VictoryCondition.Carré.getValue();
-			}
-			if(nbOfCard == 3) {
-				valueOfHand = valueOfHand | VictoryCondition.Brelan.getValue();
-			}
-			if(nbOfCard == 2) {
-				if(VictoryCondition.Paire.arePresent(valueOfHand)) {
-					valueOfHand = valueOfHand | VictoryCondition.DoublePaire.getValue();
-					valueOfHand = valueOfHand & ~VictoryCondition.Paire.getValue();
+			
+			switch(nbOfCard) {
+			case 4:
+				valueOfHand  = valueOfHand | VictoryCondition.CARRE.getValue();
+				break;
+			case 3:
+				valueOfHand = valueOfHand | VictoryCondition.BRELAN.getValue();
+				break;
+			case 2:
+				if(VictoryCondition.PAIRE.arePresent(valueOfHand)) {
+					valueOfHand = valueOfHand | VictoryCondition.DOUBLE_PAIRE.getValue();
+					valueOfHand = valueOfHand & ~VictoryCondition.PAIRE.getValue();
 				}else
-					valueOfHand = valueOfHand | VictoryCondition.Paire.getValue();
+					valueOfHand = valueOfHand | VictoryCondition.PAIRE.getValue();
+				break;
+			default:
+				break;
 			}
-			if(VictoryCondition.Brelan.arePresent(valueOfHand) && VictoryCondition.Paire.arePresent(valueOfHand)) {
-				valueOfHand = valueOfHand | VictoryCondition.Full.getValue();
-				valueOfHand = valueOfHand & ~VictoryCondition.Brelan.getValue();
-				valueOfHand = valueOfHand & ~VictoryCondition.Paire.getValue();
+
+			if(VictoryCondition.BRELAN.arePresent(valueOfHand) && VictoryCondition.PAIRE.arePresent(valueOfHand)) {
+				valueOfHand = valueOfHand | VictoryCondition.FULL.getValue();
+				valueOfHand = valueOfHand & ~VictoryCondition.BRELAN.getValue();
+				valueOfHand = valueOfHand & ~VictoryCondition.PAIRE.getValue();
 			}
 		}
-		
-		if(isCouleur(hand))
-			valueOfHand = valueOfHand | VictoryCondition.Couleur.getValue();
-		
-		if(isSuite(hand))
-			valueOfHand = valueOfHand | VictoryCondition.Suite.getValue();
-		
-		if(VictoryCondition.Couleur.arePresent(valueOfHand) && VictoryCondition.Suite.arePresent(valueOfHand)) {
-			valueOfHand = valueOfHand & ~VictoryCondition.Couleur.getValue();
-			valueOfHand = valueOfHand & ~VictoryCondition.Suite.getValue();
-			valueOfHand = valueOfHand | VictoryCondition.QuinteFlush.getValue();
-		}
-		
-		if(VictoryCondition.QuinteFlush.arePresent(valueOfHand) && isQuiteFlushRoyale(hand)) {
-				valueOfHand = valueOfHand & ~VictoryCondition.QuinteFlush.getValue();
-				valueOfHand = valueOfHand | VictoryCondition.QuinteFlushRoyale.getValue();
-		}
-		
-		if(valueOfHand == 0)
-			valueOfHand = valueOfHand | VictoryCondition.Hauteur.getValue();
-		
 		return valueOfHand;
 	}
 	
@@ -67,7 +83,7 @@ public class CardCalculator {
 		
 		Collections.sort(hand);
 		
-		int cardValueCheck = CardValue.As.getValeur();
+		int cardValueCheck = CardValue.AS.getValeur();
 		
 		for(Card card : hand) {
 			if(card.getValue().getValeur() == cardValueCheck) {
@@ -77,7 +93,7 @@ public class CardCalculator {
 			}
 		}
 		
-		return cardValueCheck == CardValue.Neuf.getValeur();
+		return cardValueCheck == CardValue.NEUF.getValeur();
 	}
 
 	private static boolean isSuite(List<Card> hand) {
@@ -98,7 +114,7 @@ public class CardCalculator {
 				result = true;
 		}
 		
-		if(hand.get(hand.size() % 5 + 1).getValue().getValeur() == 5 && hand.get(0).getValue().compareTo(CardValue.As) == 0 && ( 5 - hand.get(hand.size() % 5 + 4).getValue().getValeur() == 3))
+		if(hand.get(hand.size() % 5 + 1).getValue().getValeur() == 5 && hand.get(0).getValue().compareTo(CardValue.AS) == 0 && ( 5 - hand.get(hand.size() % 5 + 4).getValue().getValeur() == 3))
 			result = true;
 		
 		return result;

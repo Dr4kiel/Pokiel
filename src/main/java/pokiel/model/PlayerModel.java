@@ -9,7 +9,7 @@ public class PlayerModel implements PlayerModelInterface {
 	private List<Player> playerList;
 	
 	public PlayerModel() {
-		playerList = new ArrayList<Player>();
+		playerList = new ArrayList<>();
 	}
 	
 	@Override

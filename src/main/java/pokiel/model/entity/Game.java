@@ -1,6 +1,7 @@
 package pokiel.model.entity;
 
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.List;
 
 import pokiel.model.PlayerModelInterface;
 
@@ -10,11 +11,11 @@ public class Game {
 	
 	private PlayerModelInterface playerModel;
 	
-	private Stack<Card> globalHand;
+	private List<Card> globalHand;
 	
 	public Game() {
 		deck = new CardDeck();
-		globalHand = new Stack<Card>();
+		globalHand = new LinkedList<>();
 		
 		deck.shuffle();
 	}
@@ -44,11 +45,11 @@ public class Game {
 		this.playerModel = playerModel;
 	}
 
-	public Stack<Card> getGlobalHand() {
+	public List<Card> getGlobalHand() {
 		return globalHand;
 	}
 
-	public void setGlobalHand(Stack<Card> globalHand) {
+	public void setGlobalHand(List<Card> globalHand) {
 		this.globalHand = globalHand;
 	}
 	

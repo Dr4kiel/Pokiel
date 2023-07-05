@@ -1,24 +1,37 @@
 package pokiel.model.entity;
 
-import java.util.Collections;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Random;
 
 public class CardDeck {
 	
-	private Stack<Card> deck;
+	private Deque<Card> deck;
+	
+	private final Random ran;
 	
 	public CardDeck() {
 		
-		deck = new Stack<Card>();
+		deck = new ArrayDeque<>();
 		
 		for(CardColor color : CardColor.values()) {
 			for(CardValue value : CardValue.values())
 				deck.add(new Card(value, color));
 		}
+		
+		ran = new Random();
 	}
 	
 	public void shuffle() {
-		Collections.shuffle(deck);
+		Deque<Card> newDeck = new ArrayDeque<>();
+		
+		while(!deck.isEmpty()) {
+			int index = ran.nextInt(deck.size());
+			Card cardToPick = (Card) deck.toArray()[index];
+			newDeck.push(cardToPick);
+			deck.remove(cardToPick);
+		}
+		deck = newDeck;
 	}
 	
 	public Card takeACard() {
@@ -29,7 +42,7 @@ public class CardDeck {
 		return deck.size();
 	}
 	
-	public Stack<Card> getDeck(){
+	public Deque<Card> getDeck(){
 		return deck;
 	}
 

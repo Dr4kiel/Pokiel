@@ -22,11 +22,11 @@ class CardDeckTest {
 	
 	@Test
 	void shuffleTest() {
-		Card firstCard = deck.getDeck().firstElement();
+		Card firstCard = deck.getDeck().pop();
 		deck.shuffle();
 		
-		assertFalse(firstCard.getColor() == deck.getDeck().firstElement().getColor()
-				&& firstCard.getValue() == deck.getDeck().firstElement().getValue());
+		assertFalse(firstCard.getColor() == deck.getDeck().peekFirst().getColor()
+				&& firstCard.getValue() == deck.getDeck().peekFirst().getValue());
 	}
 	
 	@Test
