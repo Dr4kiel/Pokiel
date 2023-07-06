@@ -8,6 +8,4 @@ public interface PlayerModelInterface {
 
 	List<Player> getPlayerList();
 
-	void setPlayerList(List<Player> playerList);
-
 }

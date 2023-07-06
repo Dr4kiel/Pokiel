@@ -5,11 +5,12 @@ Un projet de test pour faire un jeu de poker
 - [x] Objet Carte
 - [ ] Objet Jeu
 - [x] Objet Main
-- [ ] Objet Joueur
-- [ ] Objet Calculateur
+- [x] Objet Joueur
+- [x] Objet Calculateur
 - [x] Enumération Valeur des cartes
 - [x] Enumération Couleur des cartes
 - [x] Enumération Conditions de victoire
-- [ ] Modèle de joueur
+- [x] Modèle de joueur
 - [ ] Modèle de jeu
 - [ ] IHM
+- [ ] Connexion

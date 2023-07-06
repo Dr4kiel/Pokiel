@@ -1,15 +1,14 @@
 package pokiel.model.entity;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.List;
 
 public class Player {
-	
-	private Deque<Card> hand;
+
+	private PlayerHand hand;
 	private int bank;
 	private final String name;
 	private boolean stillPlaying;
-	
+
 	public Player() {
 		this("MERP");
 	}
@@ -17,48 +16,62 @@ public class Player {
 	public Player(String name) {
 		super();
 		this.name = name;
-		this.hand = new ArrayDeque<>();
+		hand = new PlayerHand();
 		this.bank = 0;
 		this.stillPlaying = true;
 	}
-	
+
 	public void clearHand() {
-		hand.clear();
+		hand.getHand().clear();
 	}
-	
+
 	public void addToHand(Card card) {
-		hand.add(card);
+		hand.getHand().add(card);
 	}
-	
-	
+
 	/* GETTERS AND SETTERS */
-	
+
 	public int getBank() {
 		return bank;
 	}
-	
-	public Deque<Card> getHand() {
+
+	public PlayerHand getPlayerHand() {
 		return hand;
 	}
-	
+
+	public List<Card> getHand() {
+		return hand.getHand();
+	}
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setBank(int bank) {
 		this.bank = bank;
 	}
-	
-	public void setHand(Deque<Card> hand) {
+
+	public void setPlayerHand(PlayerHand hand) {
 		this.hand = hand;
 	}
-	
+
 	public boolean isStillPlaying() {
 		return stillPlaying;
 	}
-	
+
 	public void setStillPlaying(boolean stillPlaying) {
 		this.stillPlaying = stillPlaying;
+	}
+
+	public String printHand() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[ ");
+		for (Card card : hand.getHand()) {
+			sb.append(card.toString());
+			sb.append(" ");
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 
 }

@@ -1,6 +1,8 @@
 package pokiel.model.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,42 +12,42 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CardCalculatorTest {
-	
-	private List<Card> hand;
+
+	private PlayerHand hand;
 
 	@BeforeEach
 	void init() {
-		hand = new Stack<Card>();
-		
-		hand.add(new Card(CardValue.CINQ, CardColor.COEUR));
-		hand.add(new Card(CardValue.DEUX, CardColor.PIQUE));
-		hand.add(new Card(CardValue.AS, CardColor.COEUR));
-		hand.add(new Card(CardValue.DAME, CardColor.CARREAU));
-		hand.add(new Card(CardValue.SEPT, CardColor.PIQUE));
-		hand.add(new Card(CardValue.HUIT, CardColor.PIQUE));
-		hand.add(new Card(CardValue.CINQ, CardColor.TREFLE));
+		hand = new PlayerHand();
+
+		hand.getHand().add(new Card(CardValue.CINQ, CardColor.COEUR));
+		hand.getHand().add(new Card(CardValue.DEUX, CardColor.PIQUE));
+		hand.getHand().add(new Card(CardValue.AS, CardColor.COEUR));
+		hand.getHand().add(new Card(CardValue.DAME, CardColor.CARREAU));
+		hand.getHand().add(new Card(CardValue.SEPT, CardColor.PIQUE));
+		hand.getHand().add(new Card(CardValue.HUIT, CardColor.PIQUE));
+		hand.getHand().add(new Card(CardValue.CINQ, CardColor.TREFLE));
 	}
 
 	@Test
 	void testSorting() {
-		
-		Collections.sort(hand);
-		
+
+		Collections.sort(hand.getHand());
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("[ ");
-		for(Card c : hand) {
+		for (Card c : hand.getHand()) {
 			sb.append(c.getValue().toString() + " ");
 		}
 		sb.append("]");
-		
+
 		assertEquals("[ AS DAME HUIT SEPT CINQ CINQ DEUX ]", sb.toString());
 	}
-	
+
 	@Test
 	void evaluerPaire() {
 		assertTrue(VictoryCondition.PAIRE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerDoublePaire() {
 		List<Card> deck = new Stack<>();
@@ -56,10 +58,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.DOUBLE_PAIRE.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.DOUBLE_PAIRE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerBrelan() {
 		List<Card> deck = new Stack<>();
@@ -70,10 +74,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.BRELAN.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.BRELAN.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerSuite() {
 		List<Card> deck = new Stack<>();
@@ -84,10 +90,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.SUITE.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.SUITE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerCouleur() {
 		List<Card> deck = new Stack<>();
@@ -98,10 +106,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.COULEUR.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.COULEUR.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerFull() {
 		List<Card> deck = new Stack<>();
@@ -112,10 +122,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.FULL.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.FULL.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerCarre() {
 		List<Card> deck = new Stack<>();
@@ -126,10 +138,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.PIQUE));
 		deck.add(new Card(CardValue.CINQ, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.CARRE.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.CARRE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerQuinteFlush() {
 		List<Card> deck = new Stack<>();
@@ -140,10 +154,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.PIQUE));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.CARREAU));
-		
-		assertTrue(VictoryCondition.QUITE_FLUSH.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.QUINTE_FLUSH.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerQuinteFlushRoyale() {
 		List<Card> deck = new Stack<>();
@@ -154,10 +170,12 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.CARREAU));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.COEUR));
-		
-		assertTrue(VictoryCondition.QUINTE_FLUSH_ROYALE.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertTrue(VictoryCondition.QUINTE_FLUSH_ROYALE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
-	
+
 	@Test
 	void evaluerPresqueSuite() {
 		List<Card> deck = new Stack<>();
@@ -168,8 +186,10 @@ class CardCalculatorTest {
 		deck.add(new Card(CardValue.DAME, CardColor.CARREAU));
 		deck.add(new Card(CardValue.NEUF, CardColor.PIQUE));
 		deck.add(new Card(CardValue.DEUX, CardColor.COEUR));
-		
-		assertFalse(VictoryCondition.SUITE.arePresent(CardCalculator.checkVictoryCondition(deck)));
+
+		hand.setHand(deck);
+
+		assertFalse(VictoryCondition.SUITE.arePresent(CardCalculator.checkVictoryCondition(hand)));
 	}
 
 }
